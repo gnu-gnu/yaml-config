@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: simple-java-app-argo
+    app.kubernetes.io/instance: simple-java-app
+  name: gnu-simple-java-app-argo
+spec:
+  ports:
+  - port: 18080
+    protocol: TCP
+    targetPort: 18080
+  selector:
+    app: simple-java-app-argo
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: simple-java-app-argo
+  name: gnu-simple-java-app-argo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-java-app-argo
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: simple-java-app-argo
+    spec:
+      containers:
+      - image: 192.168.1.10:8443/sample-java-app-jib
+        name: sample-java-app-jib
+        resources: {}
+status: {}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  name: gnu-simple-java-app-argo
+  namespace: default
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: gnu-simple-java-app-argo
+          servicePort: 18080
+        path: /hello

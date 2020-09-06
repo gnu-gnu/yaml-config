@@ -10,6 +10,6 @@ spec:
   - http:
       paths:
       - backend:
-          serviceName: gnu-simple-java-app-argo
+          serviceName: simple-java-app-argo
           servicePort: 18080
         path: /hello
